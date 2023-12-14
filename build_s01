@@ -56,8 +56,8 @@ let step=$step+1
 
 # -----------------------------------------------------------------------------------------
 printf "\n\n  %i)   install some pre-reqs  ==============================\n", $step
-sudo apt install -y git curl libssl-dev libreadline-dev zlib1g-dev
-sudo apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+# sudo apt install -y git curl libssl-dev libreadline-dev zlib1g-dev
+apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
 
 let step=$step+1
 # -----------------------------------------------------------------------------------------
@@ -117,10 +117,13 @@ let step=$step+1
 ruby_version=`ruby -v`
 mysql_version=`mysql -V`
 nodejs_version=`nodejs -v`
+yarn_version=`yarn -v`
+
 echo "--------------------------------------------------------------------------------------"
 echo "--   Ruby Version: $ruby_version"
 echo "--  MySQL Version: $mysql_version"
 echo "-- nodejs Version: $nodejs_version"
+echo "--   yarn Version: $yarn_version"
 echo "--------------------------------------------------------------------------------------"
 # make sure we are upto date
 # apt update
