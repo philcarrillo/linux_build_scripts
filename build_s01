@@ -4,6 +4,7 @@ set -e
 
 # options
 version=0
+upgrade_only=0
 
 # output usage message
 usage() {
@@ -20,8 +21,9 @@ EOF
 
 
 
-while getopts v x ; do
+while getopts uv x ; do
   case $x in
+    u)  upgrade_only=1;;
     v)  version=1;;
     \?) echo Invalid option: -$OPTARG
         usage
@@ -36,7 +38,7 @@ if [[ $version = 1 ]]; then
   echo ""
   cat /etc/os-release
   echo ""
-  exit 1
+  exit 0
 fi
 
 step=1
@@ -50,6 +52,11 @@ printf "\n\n  %i)   Make sure our packages are up to date =============\n", $ste
 apt update
 apt upgrade
 
+
+if [[ $updrade_only = 1 ]]; then
+  printf "\n\n  Update/Update Only ... exit after step %i =============\n", $step
+  exit 0
+fi
 
 let step=$step+1
 # -----------------------------------------------------------------------------------------
