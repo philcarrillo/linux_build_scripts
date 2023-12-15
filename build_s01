@@ -13,8 +13,9 @@ usage() {
   echo "Intall ruby,  mysql , nginx and nodejs."
   echo "Set up server to be suitable for Rails projects"
   echo ""
-  echo usage: `basename $0` [-v ]
+  echo usage: `basename $0` [-uv]
   cat <<EOF
+  -u                Exit After Upgrade Step
   -v                Display Ubuntu Version
 EOF
 }
