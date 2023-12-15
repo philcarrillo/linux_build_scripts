@@ -54,7 +54,7 @@ apt update
 apt upgrade
 
 
-if [[ $updrade_only = 1 ]]; then
+if [[ $upgrade_only = 1 ]]; then
   printf "\n\n  Update/Update Only ... exit after step %i =============\n", $step
   exit 0
 fi
