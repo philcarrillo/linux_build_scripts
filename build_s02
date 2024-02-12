@@ -1,0 +1,157 @@
+#!/bin/bash
+
+set -e
+
+# options
+version=0
+upgrade_only=0
+
+# output usage message
+usage() {
+  echo ""
+  echo "Set up new Linux Instance"
+  echo "Intall ruby,  mysql , nginx and nodejs."
+  echo "Set up server to be suitable for Rails projects"
+  echo ""
+  echo usage: `basename $0` [-uv]
+  cat <<EOF
+  -u                Exit After Upgrade Step
+  -v                Display Ubuntu Version
+EOF
+}
+
+
+
+while getopts uv x ; do
+  case $x in
+    u)  upgrade_only=1;;
+    v)  version=1;;
+    \?) echo Invalid option: -$OPTARG
+        usage
+        exit 1;;
+  esac
+done
+shift $((OPTIND-1))
+
+if [[ $version = 1 ]]; then
+  # Get O/S info
+  echo "Unbutu versions information:"
+  echo ""
+  cat /etc/os-release
+  echo ""
+  exit 0
+fi
+
+step=1
+printf "\n\nExecuting build_s02 script to initialize server\n"
+
+
+
+# -----------------------------------------------------------------------------------------
+printf "\n\n  %i)   Make sure our packages are up to date =============\n", $step
+
+apt update
+apt upgrade
+
+
+if [[ $upgrade_only = 1 ]]; then
+  printf "\n\n  Update/Update Only ... exit after step %i =============\n", $step
+  exit 0
+fi
+
+let step=$step+1
+# -----------------------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------------------
+printf "\n\n  %i)   install some pre-reqs  ==============================\n", $step
+# sudo apt install -y git curl libssl-dev libreadline-dev zlib1g-dev
+apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+
+let step=$step+1
+# -----------------------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------------------
+printf "\n\n  %i)   ruby =================================================\n", $step
+apt install ruby-full ruby-dev ruby-bundler
+
+
+let step=$step+1
+# -----------------------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------------------
+printf "\n\n  %i)   nginx ===============================================\n", $step
+sudo apt install nginx
+
+let step=$step+1
+# -----------------------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------------------
+printf "\n\n  %i)   mysql ================================================\n", $step
+
+# check if mysql is installed
+if [ -f /etc/init.d/mysql* ]; then
+  printf "\n         mysql exists, no action\n"
+else
+  # Need to install mysql
+  printf "\n         ... installing mysql\n"
+
+  # apt install mysql-server
+  apt install mysql-server mysql-client libmysqlclient-dev
+
+  mysql_secure_installation
+
+fi
+
+let step=$step+1
+# -----------------------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------------------
+printf "\n\n  %i)   nodejs ================================================\n", $step
+
+NODE_MAJOR=20
+
+# Rails wants a newer version of node that we get with the Debian distro.
+apt-get install -y ca-certificates curl gnupg
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+apt-get update
+apt-get install nodejs -y -q
+corepack enable
+
+let step=$step+1
+# -----------------------------------------------------------------------------------------
+
+ruby_version=`ruby -v`
+mysql_version=`mysql -V`
+nginx_version=`nginx -v`
+nodejs_version=`nodejs -v`
+yarn_version=`yarn -v`
+
+echo "--------------------------------------------------------------------------------------"
+echo "--   Ruby Version: $ruby_version"
+echo "--  MySQL Version: $mysql_version"
+echo "--  nginx Version: $nginx_version"
+echo "-- nodejs Version: $nodejs_version"
+echo "--   yarn Version: $yarn_version"
+echo "--------------------------------------------------------------------------------------"
+# make sure we are upto date
+# apt update
+
+
+
+
+
+
+
+
+
+
+
+
+printf "\n\n------------------------------"
+printf "\n--       Finished!          --"
+printf "\n------------------------------\n\n"
+
