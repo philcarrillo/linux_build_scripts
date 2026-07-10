@@ -76,8 +76,10 @@ let step=$step+1
 printf "\n\n  %i)   install some pre-reqs  ==============================\n" $step
 if [[ $check = 1 ]]; then
   printf "\n    will execute ...  apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev"
+  printf "\n    will execute ...  apt install libvips-dev --no-install-recommends"
 else
   apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+  apt install libvips-dev --no-install-recommends
 fi
 
 
