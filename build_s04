@@ -3,6 +3,9 @@
 set -e
 set -o pipefail
 
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+
 # options
 version=0
 upgrade_only=0
