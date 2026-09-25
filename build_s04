@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -o pipefail
 
 # options
 version=0
@@ -54,11 +55,11 @@ step=1
 # -----------------------------------------------------------------------------------------
 printf "\n\n  %i)   Make sure our packages are up to date =============\n" $step
 if [[ $check = 1 ]]; then
-  printf "\n    will execute ...  apt update"
-  printf "\n    will execute ...  apt upgrade"
+  printf "\n    will execute ...  apt-get update"
+  printf "\n    will execute ...  apt-get -y -o Dpkg::Options::="--force-confold" upgrade"
 else
-  apt update
-  apt upgrade
+  apt-get update
+  apt-get -y -o Dpkg::Options::="--force-confold" upgrade
 fi
 
 
