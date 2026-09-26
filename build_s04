@@ -17,9 +17,9 @@ usage() {
   echo ""
   echo "== build_s04 =="
   echo ""
-  echo "Set up new Linux Instance (Ubuntu 24.04) on a WSL virtual machine"
+  echo "Set up new Linux Instance (Ubuntu 26.04) on a WSL virtual machine"
   echo "Intall ruby, mysql and nodejs."
-  echo "Set up server to be suitable for Rails projects"
+  echo "Set up Ubuntu to be suitable for Rails projects"
   echo ""
   echo usage: `basename $0` [-uv]
   cat <<EOF
