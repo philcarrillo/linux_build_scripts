@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+
+printf "\n Begin upgrades ....\n\n"
+
+if [[ $CHECK == "check" ]]; then
+  printf "\n    will execute ...  apt-get update"
+  printf "\n    will execute ...  apt-get -y -o Dpkg::Options::="--force-confold" upgrade"
+else
+  apt-get update
+  apt-get -y -o Dpkg::Options::="--force-confold" upgrade
+fi
+
+printf "\n\n  completed  upgrades\n\n"

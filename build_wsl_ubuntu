@@ -1,0 +1,120 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+# output usage message
+usage() {
+  echo ""
+  echo "== build_wsl_ubuntu =="
+  echo ""
+  echo "Set up new Linux Instance (Ubuntu 26.04) on a WSL virtual machine"
+  echo "Intall ruby, mysql and nodejs."
+  echo "Set up Ubuntu to be suitable for Rails projects"
+  echo ""
+  echo usage: `basename $0` [-uv]
+  cat <<EOF
+  -c         Check Only - do not execute commands
+  -s         Exit After Upgrade Step
+EOF
+}
+
+
+# Set our log file name and make sure folder exists
+RUN_ID=$(date +"%Y%m%d_%H%M%S")
+RAW_LOGFILE="/tmp/build_wsl_ubuntu_raw_${RUN_ID}.log"
+LOGFILE="logs/log_${RUN_ID}"
+
+LOG_FOLDER="logs"
+if [[ ! -d $LOG_FOLDER ]]; then
+   mkdir LOG_FOLDER
+fi
+
+log() {
+  echo "$@" | tee -a "$RAW_LOGFILE"
+}
+
+
+log "Starting build_wsl_ubuntu"
+log ""
+log  `lsb_release -a`
+log ""
+
+
+# options
+check=""
+subset=""
+
+# output usage message
+usage() {
+  echo ""
+  echo "== build_wsl_ubuntu =="
+  echo ""
+  echo "Set up new Linux Instance (Ubuntu 26.04) on a WSL virtual machine"
+  echo "Intall ruby, mysql and nodejs."
+  echo "Set up Ubuntu to be suitable for Rails projects"
+  echo ""
+  echo usage: `basename $0` [-c -s subscript]
+  cat <<EOF
+  -c                Check Only - do not execute commands
+  -s substep        Run a single step.  Valid aubsteps are as follows:
+                    prep - run the prep step
+                    mysql - run the mysql installer
+                    node - run the node installation
+                    ruby - run the ruby installation 
+                    upgrade - run the upgrade step
+
+                    blank -run all steps
+EOF
+}
+
+while getopts cs:\? x ; do
+  case $x in
+    c)  check="check";;
+    s)  subset="$OPTARG";;
+    \?) usage
+        exit 1;;
+  esac
+done
+shift $((OPTIND-1))
+
+export CHECK=check
+if [[ $CHECK == "check"   ]]; then
+    log ""
+    log " ******* CHECK RUN - No commands will be executed ********"
+    log ""
+fi
+
+if [[ $subset == "" || $subset == "upgrade"  ]]; then
+    script -e -a -q -c "./build_upgrade" "$RAW_LOGFILE"
+fi
+
+
+if [[ $subset == "" || $subset == "prep"  ]]; then
+    script -e -a -q -c "./build_prep" "$RAW_LOGFILE"
+fi
+
+if [[ $subset == "" || $subset == "ruby"  ]]; then
+    script -e -a -q -c "./build_mysql" "$RAW_LOGFILE"
+fi
+
+if [[ $subset == "" || $subset == "mysql"  ]]; then
+    script -e -a -q -c "./build_mysql" "$RAW_LOGFILE"
+fi
+
+if [[ $subset == "" || $subset == "node"  ]]; then
+    script -e -a -q -c "./build_node" "$RAW_LOGFILE"
+fi
+
+
+
+
+
+
+
+
+# Clean up our raw log file and exit
+log "Done"
+col -bx < $RAW_LOGFILE > $LOGFILE
+rm $RAW_LOGFILE
+

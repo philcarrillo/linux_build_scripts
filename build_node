@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+
+printf "\n Begin node ....\n\n"
+
+if [[ $CHECK == "check" ]]; then
+  echo "************ not yet implemented  ******************"
+else
+  echo "************ not yet implemented  ******************"
+fi
+
+printf "\n\n  completed  node\n\n"
