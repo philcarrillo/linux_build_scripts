@@ -6,12 +6,12 @@ set -o pipefail
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
-printf "\n Begin ruby ....\n\n"
+printf "\n Begin ruby install ....\n\n"
 
 if [[ $CHECK == "check" ]]; then
-  echo "************ not yet implemented  ******************"
+  printf "\n    will execute ...  apt-get install -y ruby-full ruby-dev ruby-bundler"
 else
-  echo "************ not yet implemented  ******************"
+  apt-get install -y ruby-full ruby-dev ruby-bundler
 fi
 
-printf "\n\n  completed  ruby\n\n"
+printf "\n\n  completed ruby install\n\n"
