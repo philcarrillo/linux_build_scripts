@@ -9,9 +9,11 @@ export NEEDRESTART_MODE=a
 printf "\n Begin prep ....\n\n"
 
 if [[ $CHECK == "check" ]]; then
-  echo "************ not yet implemented  ******************"
+  printf "\n    will execute ...  apt-get install -y git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libncurses5-dev libffi-dev libgdbm-dev"
+  printf "\n    will execute ...  apt-get install -y libvips-dev --no-install-recommends"
 else
-  echo "************ not yet implemented  ******************"
+  apt-get install -y git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libncurses5-dev libffi-dev libgdbm-dev
+  apt-get install -y libvips-dev --no-install-recommends
 fi
 
 printf "\n\n  completed  prep\n\n"
