@@ -3,23 +3,6 @@
 set -e
 set -o pipefail
 
-# output usage message
-usage() {
-  echo ""
-  echo "== build_wsl_ubuntu =="
-  echo ""
-  echo "Set up new Linux Instance (Ubuntu 26.04) on a WSL virtual machine"
-  echo "Intall ruby, mysql and nodejs."
-  echo "Set up Ubuntu to be suitable for Rails projects"
-  echo ""
-  echo usage: `basename $0` [-uv]
-  cat <<EOF
-  -c         Check Only - do not execute commands
-  -s         Exit After Upgrade Step
-EOF
-}
-
-
 # Set our log file name and make sure folder exists
 RUN_ID=$(date +"%Y%m%d_%H%M%S")
 RAW_LOGFILE="/tmp/build_wsl_ubuntu_raw_${RUN_ID}.log"
@@ -27,17 +10,22 @@ LOGFILE="logs/log_${RUN_ID}"
 
 LOG_FOLDER="logs"
 if [[ ! -d $LOG_FOLDER ]]; then
-   mkdir LOG_FOLDER
+   mkdir $LOG_FOLDER
 fi
 
 log() {
   echo "$@" | tee -a "$RAW_LOGFILE"
 }
 
+cleanup() {
+    col -bx < "$RAW_LOGFILE" > "$LOGFILE"
+    rm -f "$RAW_LOGFILE"
+}
+trap cleanup EXIT
 
 log "Starting build_wsl_ubuntu"
 log ""
-log  `lsb_release -a`
+log "$(lsb_release -a)"
 log ""
 
 
@@ -95,7 +83,7 @@ if [[ $subset == "" || $subset == "prep"  ]]; then
 fi
 
 if [[ $subset == "" || $subset == "ruby"  ]]; then
-    script -e -a -q -c "./build_mysql" "$RAW_LOGFILE"
+    script -e -a -q -c "./build_ruby" "$RAW_LOGFILE"
 fi
 
 if [[ $subset == "" || $subset == "mysql"  ]]; then
@@ -106,15 +94,5 @@ if [[ $subset == "" || $subset == "node"  ]]; then
     script -e -a -q -c "./build_node" "$RAW_LOGFILE"
 fi
 
-
-
-
-
-
-
-
-# Clean up our raw log file and exit
 log "Done"
-col -bx < $RAW_LOGFILE > $LOGFILE
-rm $RAW_LOGFILE
 
