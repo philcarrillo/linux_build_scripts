@@ -78,7 +78,7 @@ while getopts cs:\? x ; do
 done
 shift $((OPTIND-1))
 
-export CHECK=check
+export CHECK=$check
 if [[ $CHECK == "check"   ]]; then
     log ""
     log " ******* CHECK RUN - No commands will be executed ********"
