@@ -6,12 +6,20 @@ set -o pipefail
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
-printf "\n Begin mysql ....\n\n"
+printf "\n Begin mysql install ....\n\n"
 
-if [[ $CHECK == "check" ]]; then
-  echo "************ not yet implemented  ******************"
+if command -v mysql >/dev/null 2>&1; then
+  printf "\n         mysql already installed, no action\n\n"
 else
-  echo "************ not yet implemented  ******************"
+  printf "\n         ... installing mysql\n\n"
+
+  if [[ $CHECK == "check" ]]; then
+    printf "\n    will execute ...  apt-get install -y mysql-server mysql-client libmysqlclient-dev"
+    printf "\n    will execute ...  mysql_secure_installation"
+  else
+    apt-get install -y mysql-server mysql-client libmysqlclient-dev
+    mysql_secure_installation
+  fi
 fi
 
-printf "\n\n  completed  mysql\n\n"
+printf "\n\n  completed mysql install\n\n"
